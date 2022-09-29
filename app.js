@@ -7,10 +7,16 @@ import helmet from 'helmet'
 import expressRateLimit from 'express-rate-limit'
 import arr from './helpers/arr.js'
 import expressQueryBoolean from 'express-query-boolean'
+import path from 'path'
+import dotenv from 'dotenv'
+
 const app=express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname,process.env.AVATAR_OF_USERS)))
 app.use(helmet())
+
 app.use(logger(formatsLogger))
 app.use(cors())
 app.use(express.json({limit:10000}))

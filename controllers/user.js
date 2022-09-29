@@ -2,6 +2,7 @@ import User from '../repositories/users.js'
 import arr from '../helpers/arr.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv/config'
+import UploadAvatarService from '../service/local-upload.js'
 
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -65,4 +66,16 @@ const logout = async (req, res, next) => {
     }
 }
 
-export default {register, login, logout}
+const avatars = async (req, res, next) => { 
+    try {
+        const id = req.user.id
+        const uploads = new UploadAvatarService(process.env.AVATAR_OF_USERS)
+        const avatarUrl = await uploads.saveAvatar({ isUser: id, file: req.file })
+        await User.updateAvatar(id, avatarUrl)
+        res.json({ status:'success',code:200,data: {avatarUrl} })
+    } catch (error) {
+        nexnt(error)
+    } 
+}
+
+export default {register, login, logout,avatars}
