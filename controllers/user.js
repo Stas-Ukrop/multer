@@ -2,7 +2,10 @@ import User from '../repositories/users.js'
 import arr from '../helpers/arr.js'
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv/config'
-import UploadAvatarService from '../service/local-upload.js'
+//import UploadAvatarService from '../service/local-upload.js'
+import UploadAvatarService from '../service/cloud-upload.js'
+import fs from 'fs/promise'
+import path from 'path'
 
 const SECRET_KEY = process.env.SECRET_KEY
 
@@ -65,16 +68,37 @@ const logout = async (req, res, next) => {
         next(error)
     }
 }
+/*
 
 const avatars = async (req, res, next) => { 
     try {
         const id = req.user.id
         const uploads = new UploadAvatarService(process.env.AVATAR_OF_USERS)
+        console.log(uploads)
         const avatarUrl = await uploads.saveAvatar({ isUser: id, file: req.file })
+        try {
+            await fs.unlink(path.join(process.env.AVATAR_OF_USERS,req.user.avatar))
+        } catch (e) {
+            console.log(e)
+        }
         await User.updateAvatar(id, avatarUrl)
         res.json({ status:'success',code:200,data: {avatarUrl} })
     } catch (error) {
-        nexnt(error)
+        next(error)
+    } 
+}
+*/
+const avatars = async (req, res, next) => { 
+    try {
+        const id = req.user.id
+        const uploads = new UploadAvatarService()
+        
+        const {isCloudAvatar, avatarUrl} = await uploads.saveAvatar(req.file.path,req.user.isCloudAvatar)
+        await fs.unlink(req.file.path)
+        await User.updateAvatar(id, avatarUrl,isCloudAvatar)
+        res.json({ status:'success',code:200,data: {avatarUrl} })
+    } catch (error) {
+        next(error)
     } 
 }
 

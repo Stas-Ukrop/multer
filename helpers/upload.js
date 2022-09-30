@@ -1,5 +1,4 @@
 import multer from 'multer'
-import path from 'path'
 import dotenv from 'dotenv/config'
 const UPLOAD_DIR = process.env.UPLOAD_DIR
 
@@ -16,8 +15,8 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage, limits: { fileSize: 2000000 }, fileFilter: (req, file, cb) => {
         if (file.mimetype.includes('image')) {
-            cb(null, true)
-            return
+            
+            return cb(null, true)
         }
         const error= new Error('Накой ты мне это шлешь?')
         error.status = 400

@@ -13,7 +13,8 @@ import dotenv from 'dotenv'
 const app=express()
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short'
 
-const __dirname = path.resolve();
+const __dirname = path.resolve()
+// console.log(__dirname)
 app.use(express.static(path.join(__dirname,process.env.AVATAR_OF_USERS)))
 app.use(helmet())
 
