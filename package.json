@@ -5,8 +5,12 @@
     "main": "server.js",
     "type": "module",
     "scripts": {
-        "start": "bin/server.js",
-        "dev:start": "nodemon bin/server.js"
+        "start": "cross-env NODE_ENV=production node ./bin/server.js",
+        "dev:start": "nodemon bin/server.js",
+        "lint":"eslint --fix **/*.js",
+        "lint:fix":"eslint --fix **/*.js",
+        "test":"cross-env NODE_ENV=test jest --no-cache --verbose --detectOpenHandles",
+        "test:coverage":"cross-env NODE_ENV=test jest --coverage"
     },
     "author": "Stas",
     "license": "ISC",
@@ -23,6 +27,7 @@
         "fs": "^0.0.1-security",
         "gravatar": "^1.8.2",
         "helmet": "^6.0.0",
+        "jest": "^29.1.2",
         "jimp": "^0.16.2",
         "joi": "^17.6.0",
         "jsonwebtoken": "^8.5.1",
